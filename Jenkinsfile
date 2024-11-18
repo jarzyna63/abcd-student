@@ -19,7 +19,7 @@ pipeline {
                     docker run --name juice-shop -d --rm \
                         -p 3000:3000 \
                         bkimminich/juice-shop
-                    sleep 5
+                    sleep 10
                 '''
                 sh '''
                     docker run --name zap \
