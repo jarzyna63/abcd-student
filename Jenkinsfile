@@ -27,6 +27,7 @@ pipeline {
                         productName: 'Juice Shop', 
                         scanType: 'OSV Scan', 
                         engagementName: 'krzysztof.czartoryski@xtb.com')
+                    echo 'SCA scan succeeded!'
                 }
             }
         }
