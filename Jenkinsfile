@@ -17,6 +17,20 @@ pipeline {
                 sh 'mkdir -p results/'
             }
         }
+        stage('SAST scan') {
+            steps {
+                sh 'semgrep scan --config auto --json-output=results/sast-scanner.json'
+            }
+            post {
+                success {
+                    defectDojoPublisher(artifact: 'results/sast-scanner.json', 
+                        productName: 'Juice Shop', 
+                        scanType: 'Semgrep JSON Report', 
+                        engagementName: 'krzysztof.czartoryski@xtb.com')
+                    echo 'SAST scan succeeded!'
+                }
+            }
+        }
         stage('Secrets scan') {
             steps {
                 sh 'trufflehog git file://. --only-verified --branch=main --json >> results/secrets-scanner.json'
@@ -27,7 +41,7 @@ pipeline {
                         productName: 'Juice Shop', 
                         scanType: 'Trufflehog Scan', 
                         engagementName: 'krzysztof.czartoryski@xtb.com')
-                    echo 'SCA scan succeeded!'
+                    echo 'Secrets scan succeeded!'
                 }
             }
         }
