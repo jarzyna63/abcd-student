@@ -12,6 +12,11 @@ pipeline {
                 }
             }
         }
+        stage('Preparation stage') {
+            steps {
+                sh 'mkdir -p results/'
+            }
+        }
         stage('Secrets scan') {
             steps {
                 sh 'trufflehog git file://. --only-verified --branch=main --json >> results/secrets-scanner.json'
@@ -24,11 +29,6 @@ pipeline {
                         engagementName: 'krzysztof.czartoryski@xtb.com')
                     echo 'SCA scan succeeded!'
                 }
-            }
-        }
-        stage('Preparation stage') {
-            steps {
-                sh 'mkdir -p results/'
             }
         }
         stage('SCA scan') {
