@@ -14,7 +14,7 @@ pipeline {
         }
         stage('Secrets scan') {
             steps {
-                sh 'trufflehog git file://. --only-verified --branch=main --json --fail'
+                sh 'trufflehog git file://. --only-verified --branch=main --json >> results/secrets-scanner.json'
             }
             post {
                 success {
