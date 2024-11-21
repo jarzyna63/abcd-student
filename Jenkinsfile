@@ -12,6 +12,20 @@ pipeline {
                 }
             }
         }
+        stage('Secrets scan') {
+            steps {
+                sh 'trufflehog git file://. --only-verified --branch=main --json --fail'
+            }
+            post {
+                success {
+                    defectDojoPublisher(artifact: 'results/secrets-scanner.json', 
+                        productName: 'Juice Shop', 
+                        scanType: 'Trufflehog Scan', 
+                        engagementName: 'krzysztof.czartoryski@xtb.com')
+                    echo 'SCA scan succeeded!'
+                }
+            }
+        }
         stage('Preparation stage') {
             steps {
                 sh 'mkdir -p results/'
@@ -22,7 +36,7 @@ pipeline {
                 sh 'osv-scanner scan --lockfile package-lock.json --format json --output results/sca-osv-scanner.json || true'
             }
             post {
-                always {
+                success {
                     defectDojoPublisher(artifact: 'results/sca-osv-scanner.json', 
                         productName: 'Juice Shop', 
                         scanType: 'OSV Scan', 
